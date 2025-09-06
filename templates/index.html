@@ -5,30 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Water Segmentation</title>
 
-
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f2f6fc;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #48cae4, #0077b6);
       margin: 0;
       padding: 0;
+      color: #333;
     }
 
     .container {
-      max-width: 700px;
+      max-width: 900px;
       margin: 50px auto;
-      background-color: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       text-align: center;
+      animation: fadeIn 1s ease-in-out;
     }
 
     h1 {
       color: #0077b6;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      font-size: 28px;
     }
 
     form {
@@ -38,63 +40,96 @@
     input[type="file"] {
       padding: 10px;
       margin-bottom: 15px;
+      border: 2px dashed #0077b6;
+      border-radius: 12px;
+      background: #f0f8ff;
+      cursor: pointer;
     }
 
     button {
-      padding: 10px 20px;
-      background-color: #0077b6;
+      padding: 12px 24px;
+      background: #0077b6;
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
 
     button:hover {
-      background-color: #023e8a;
+      background: #023e8a;
+      transform: scale(1.05);
     }
 
     .results {
-      display: flex;
-      justify-content: space-around;
-      flex-wrap: wrap;
-      gap: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
     }
 
-    .results img {
+    .card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+    }
+
+    .card img {
       max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
     h3 {
-      color: #023e8a;
-      margin-top: 10px;
+      color: #0077b6;
+      margin-top: 15px;
+      font-size: 18px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Upload Satellite Image</h1>
+    <h1>🌊 Water Body Segmentation</h1>
+    <p style="color: #666;">Upload a satellite image and visualize water body detection using deep learning.</p>
+    
     <form method="post" enctype="multipart/form-data">
       <input type="file" name="image" accept=".tif,.tiff,.png,.jpg,.jpeg" required />
-      <br>
-      <button type="submit">Upload</button>
+      <br><br>
+      <button type="submit">🚀 Upload & Predict</button>
     </form>
 
     <div class="results">
       {% if original_path %}
-        <div>
+        <div class="card">
           <h3>Original Image</h3>
           <img src="{{ url_for('static', filename='uploads/' + original_path) }}" alt="Original Image" />
         </div>
       {% endif %}
 
       {% if mask_path %}
-        <div>
+        <div class="card">
           <h3>Predicted Water Mask</h3>
           <img src="{{ url_for('static', filename='uploads/' + mask_path) }}" alt="Predicted Mask" />
+        </div>
+      {% endif %}
+
+      {% if overlay_path %}
+        <div class="card">
+          <h3>Overlay Result</h3>
+          <img src="{{ url_for('static', filename='uploads/' + overlay_path) }}" alt="Overlay Image" />
         </div>
       {% endif %}
     </div>
